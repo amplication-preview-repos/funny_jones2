@@ -23,7 +23,9 @@ import {
   IsInt,
 } from "class-validator";
 import { Type } from "class-transformer";
+import { InventoryUpdateManyWithoutProductsInput } from "./InventoryUpdateManyWithoutProductsInput";
 import { InventoryTransactionUpdateManyWithoutProductsInput } from "./InventoryTransactionUpdateManyWithoutProductsInput";
+import { OrderUpdateManyWithoutProductsInput } from "./OrderUpdateManyWithoutProductsInput";
 import { SupplierWhereUniqueInput } from "../../supplier/base/SupplierWhereUniqueInput";
 
 @InputType()
@@ -39,6 +41,30 @@ class ProductUpdateInput {
     nullable: true,
   })
   category?: CategoryWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => InventoryUpdateManyWithoutProductsInput,
+  })
+  @ValidateNested()
+  @Type(() => InventoryUpdateManyWithoutProductsInput)
+  @IsOptional()
+  @Field(() => InventoryUpdateManyWithoutProductsInput, {
+    nullable: true,
+  })
+  inventories?: InventoryUpdateManyWithoutProductsInput;
 
   @ApiProperty({
     required: false,
@@ -63,6 +89,18 @@ class ProductUpdateInput {
     nullable: true,
   })
   name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrderUpdateManyWithoutProductsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrderUpdateManyWithoutProductsInput)
+  @IsOptional()
+  @Field(() => OrderUpdateManyWithoutProductsInput, {
+    nullable: true,
+  })
+  orders?: OrderUpdateManyWithoutProductsInput;
 
   @ApiProperty({
     required: false,

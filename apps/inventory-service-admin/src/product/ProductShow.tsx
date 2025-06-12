@@ -27,6 +27,7 @@ export const ProductShow = (props: ShowProps): React.ReactElement => {
           <TextField source={CATEGORY_TITLE_FIELD} />
         </ReferenceField>
         <DateField source="createdAt" label="Created At" />
+        <TextField label="description" source="description" />
         <TextField label="ID" source="id" />
         <TextField label="name" source="name" />
         <TextField label="price" source="price" />
@@ -40,6 +41,26 @@ export const ProductShow = (props: ShowProps): React.ReactElement => {
           <TextField source={SUPPLIER_TITLE_FIELD} />
         </ReferenceField>
         <DateField source="updatedAt" label="Updated At" />
+        <ReferenceManyField
+          reference="Inventory"
+          target="productId"
+          label="Inventories"
+        >
+          <Datagrid rowClick="show" bulkActionButtons={false}>
+            <DateField source="createdAt" label="Created At" />
+            <TextField label="ID" source="id" />
+            <TextField label="lastUpdated" source="lastUpdated" />
+            <ReferenceField
+              label="Product"
+              source="product.id"
+              reference="Product"
+            >
+              <TextField source={PRODUCT_TITLE_FIELD} />
+            </ReferenceField>
+            <TextField label="quantity" source="quantity" />
+            <DateField source="updatedAt" label="Updated At" />
+          </Datagrid>
+        </ReferenceManyField>
         <ReferenceManyField
           reference="InventoryTransaction"
           target="productId"
@@ -58,6 +79,24 @@ export const ProductShow = (props: ShowProps): React.ReactElement => {
             <TextField label="quantity" source="quantity" />
             <TextField label="transactionDate" source="transactionDate" />
             <TextField label="type" source="typeField" />
+            <DateField source="updatedAt" label="Updated At" />
+          </Datagrid>
+        </ReferenceManyField>
+        <ReferenceManyField reference="Order" target="productId" label="Orders">
+          <Datagrid rowClick="show" bulkActionButtons={false}>
+            <DateField source="createdAt" label="Created At" />
+            <TextField label="ID" source="id" />
+            <TextField label="orderDate" source="orderDate" />
+            <ReferenceField
+              label="Product"
+              source="product.id"
+              reference="Product"
+            >
+              <TextField source={PRODUCT_TITLE_FIELD} />
+            </ReferenceField>
+            <TextField label="quantity" source="quantity" />
+            <TextField label="soldBy" source="soldBy" />
+            <TextField label="totalPrice" source="totalPrice" />
             <DateField source="updatedAt" label="Updated At" />
           </Datagrid>
         </ReferenceManyField>

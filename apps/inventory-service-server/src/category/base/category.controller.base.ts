@@ -159,6 +159,7 @@ export class CategoryControllerBase {
         },
 
         createdAt: true,
+        description: true,
         id: true,
         name: true,
         price: true,

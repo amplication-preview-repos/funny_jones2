@@ -11,9 +11,12 @@ model Product {
   category              Category?              @relation(fields: [categoryId], references: [id])
   categoryId            String?
   createdAt             DateTime               @default(now())
+  description           String?
   id                    String                 @id @default(cuid())
+  inventories           Inventory[]
   inventoryTransactions InventoryTransaction[]
   name                  String?
+  orders                Order[]
   price                 Float?
   quantity              Int?
   sku                   String?
@@ -50,6 +53,28 @@ model InventoryTransaction {
   transactionDate DateTime?
   typeField       EnumInventoryTransactionTypeField?
   updatedAt       DateTime                           @updatedAt
+}
+
+model Inventory {
+  createdAt   DateTime  @default(now())
+  id          String    @id @default(cuid())
+  lastUpdated DateTime?
+  product     Product?  @relation(fields: [productId], references: [id])
+  productId   String?
+  quantity    Int?
+  updatedAt   DateTime  @updatedAt
+}
+
+model Order {
+  createdAt  DateTime  @default(now())
+  id         String    @id @default(cuid())
+  orderDate  DateTime?
+  product    Product?  @relation(fields: [productId], references: [id])
+  productId  String?
+  quantity   Int?
+  soldBy     String?
+  totalPrice Float?
+  updatedAt  DateTime  @updatedAt
 }
 
 enum EnumInventoryTransactionTypeField {

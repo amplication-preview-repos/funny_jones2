@@ -20,8 +20,12 @@ import { ProductFindUniqueArgs } from "./ProductFindUniqueArgs";
 import { CreateProductArgs } from "./CreateProductArgs";
 import { UpdateProductArgs } from "./UpdateProductArgs";
 import { DeleteProductArgs } from "./DeleteProductArgs";
+import { InventoryFindManyArgs } from "../../inventory/base/InventoryFindManyArgs";
+import { Inventory } from "../../inventory/base/Inventory";
 import { InventoryTransactionFindManyArgs } from "../../inventoryTransaction/base/InventoryTransactionFindManyArgs";
 import { InventoryTransaction } from "../../inventoryTransaction/base/InventoryTransaction";
+import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
+import { Order } from "../../order/base/Order";
 import { Category } from "../../category/base/Category";
 import { Supplier } from "../../supplier/base/Supplier";
 import { ProductService } from "../product.service";
@@ -129,6 +133,20 @@ export class ProductResolverBase {
     }
   }
 
+  @graphql.ResolveField(() => [Inventory], { name: "inventories" })
+  async findInventories(
+    @graphql.Parent() parent: Product,
+    @graphql.Args() args: InventoryFindManyArgs
+  ): Promise<Inventory[]> {
+    const results = await this.service.findInventories(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
   @graphql.ResolveField(() => [InventoryTransaction], {
     name: "inventoryTransactions",
   })
@@ -140,6 +158,20 @@ export class ProductResolverBase {
       parent.id,
       args
     );
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @graphql.ResolveField(() => [Order], { name: "orders" })
+  async findOrders(
+    @graphql.Parent() parent: Product,
+    @graphql.Args() args: OrderFindManyArgs
+  ): Promise<Order[]> {
+    const results = await this.service.findOrders(parent.id, args);
 
     if (!results) {
       return [];

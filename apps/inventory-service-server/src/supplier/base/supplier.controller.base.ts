@@ -164,6 +164,7 @@ export class SupplierControllerBase {
         },
 
         createdAt: true,
+        description: true,
         id: true,
         name: true,
         price: true,

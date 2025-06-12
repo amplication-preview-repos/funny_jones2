@@ -22,9 +22,15 @@ import { Product } from "./Product";
 import { ProductFindManyArgs } from "./ProductFindManyArgs";
 import { ProductWhereUniqueInput } from "./ProductWhereUniqueInput";
 import { ProductUpdateInput } from "./ProductUpdateInput";
+import { InventoryFindManyArgs } from "../../inventory/base/InventoryFindManyArgs";
+import { Inventory } from "../../inventory/base/Inventory";
+import { InventoryWhereUniqueInput } from "../../inventory/base/InventoryWhereUniqueInput";
 import { InventoryTransactionFindManyArgs } from "../../inventoryTransaction/base/InventoryTransactionFindManyArgs";
 import { InventoryTransaction } from "../../inventoryTransaction/base/InventoryTransaction";
 import { InventoryTransactionWhereUniqueInput } from "../../inventoryTransaction/base/InventoryTransactionWhereUniqueInput";
+import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
+import { Order } from "../../order/base/Order";
+import { OrderWhereUniqueInput } from "../../order/base/OrderWhereUniqueInput";
 
 export class ProductControllerBase {
   constructor(protected readonly service: ProductService) {}
@@ -57,6 +63,7 @@ export class ProductControllerBase {
         },
 
         createdAt: true,
+        description: true,
         id: true,
         name: true,
         price: true,
@@ -89,6 +96,7 @@ export class ProductControllerBase {
         },
 
         createdAt: true,
+        description: true,
         id: true,
         name: true,
         price: true,
@@ -122,6 +130,7 @@ export class ProductControllerBase {
         },
 
         createdAt: true,
+        description: true,
         id: true,
         name: true,
         price: true,
@@ -178,6 +187,7 @@ export class ProductControllerBase {
           },
 
           createdAt: true,
+          description: true,
           id: true,
           name: true,
           price: true,
@@ -220,6 +230,7 @@ export class ProductControllerBase {
           },
 
           createdAt: true,
+          description: true,
           id: true,
           name: true,
           price: true,
@@ -243,6 +254,89 @@ export class ProductControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/inventories")
+  @ApiNestedQuery(InventoryFindManyArgs)
+  async findInventories(
+    @common.Req() request: Request,
+    @common.Param() params: ProductWhereUniqueInput
+  ): Promise<Inventory[]> {
+    const query = plainToClass(InventoryFindManyArgs, request.query);
+    const results = await this.service.findInventories(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        id: true,
+        lastUpdated: true,
+
+        product: {
+          select: {
+            id: true,
+          },
+        },
+
+        quantity: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/inventories")
+  async connectInventories(
+    @common.Param() params: ProductWhereUniqueInput,
+    @common.Body() body: InventoryWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      inventories: {
+        connect: body,
+      },
+    };
+    await this.service.updateProduct({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/inventories")
+  async updateInventories(
+    @common.Param() params: ProductWhereUniqueInput,
+    @common.Body() body: InventoryWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      inventories: {
+        set: body,
+      },
+    };
+    await this.service.updateProduct({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/inventories")
+  async disconnectInventories(
+    @common.Param() params: ProductWhereUniqueInput,
+    @common.Body() body: InventoryWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      inventories: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateProduct({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 
   @common.Get("/:id/inventoryTransactions")
@@ -319,6 +413,91 @@ export class ProductControllerBase {
   ): Promise<void> {
     const data = {
       inventoryTransactions: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateProduct({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Get("/:id/orders")
+  @ApiNestedQuery(OrderFindManyArgs)
+  async findOrders(
+    @common.Req() request: Request,
+    @common.Param() params: ProductWhereUniqueInput
+  ): Promise<Order[]> {
+    const query = plainToClass(OrderFindManyArgs, request.query);
+    const results = await this.service.findOrders(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        id: true,
+        orderDate: true,
+
+        product: {
+          select: {
+            id: true,
+          },
+        },
+
+        quantity: true,
+        soldBy: true,
+        totalPrice: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/orders")
+  async connectOrders(
+    @common.Param() params: ProductWhereUniqueInput,
+    @common.Body() body: OrderWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      orders: {
+        connect: body,
+      },
+    };
+    await this.service.updateProduct({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/orders")
+  async updateOrders(
+    @common.Param() params: ProductWhereUniqueInput,
+    @common.Body() body: OrderWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      orders: {
+        set: body,
+      },
+    };
+    await this.service.updateProduct({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/orders")
+  async disconnectOrders(
+    @common.Param() params: ProductWhereUniqueInput,
+    @common.Body() body: OrderWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      orders: {
         disconnect: body,
       },
     };

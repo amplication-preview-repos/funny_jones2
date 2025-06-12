@@ -6,14 +6,16 @@ import {
   EditProps,
   ReferenceInput,
   SelectInput,
+  TextInput,
   ReferenceArrayInput,
   SelectArrayInput,
-  TextInput,
   NumberInput,
 } from "react-admin";
 
 import { CategoryTitle } from "../category/CategoryTitle";
+import { InventoryTitle } from "../inventory/InventoryTitle";
 import { InventoryTransactionTitle } from "../inventoryTransaction/InventoryTransactionTitle";
+import { OrderTitle } from "../order/OrderTitle";
 import { SupplierTitle } from "../supplier/SupplierTitle";
 
 export const ProductEdit = (props: EditProps): React.ReactElement => {
@@ -27,6 +29,14 @@ export const ProductEdit = (props: EditProps): React.ReactElement => {
         >
           <SelectInput optionText={CategoryTitle} />
         </ReferenceInput>
+        <TextInput label="description" multiline source="description" />
+        <ReferenceArrayInput source="inventories" reference="Inventory">
+          <SelectArrayInput
+            optionText={InventoryTitle}
+            parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
+            format={(value: any) => value && value.map((v: any) => v.id)}
+          />
+        </ReferenceArrayInput>
         <ReferenceArrayInput
           source="inventoryTransactions"
           reference="InventoryTransaction"
@@ -38,6 +48,13 @@ export const ProductEdit = (props: EditProps): React.ReactElement => {
           />
         </ReferenceArrayInput>
         <TextInput label="name" source="name" />
+        <ReferenceArrayInput source="orders" reference="Order">
+          <SelectArrayInput
+            optionText={OrderTitle}
+            parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
+            format={(value: any) => value && value.map((v: any) => v.id)}
+          />
+        </ReferenceArrayInput>
         <NumberInput label="price" source="price" />
         <NumberInput step={1} label="quantity" source="quantity" />
         <TextInput label="sku" source="sku" />

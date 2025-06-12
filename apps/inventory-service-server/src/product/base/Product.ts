@@ -26,7 +26,9 @@ import {
 } from "class-validator";
 
 import { Type } from "class-transformer";
+import { Inventory } from "../../inventory/base/Inventory";
 import { InventoryTransaction } from "../../inventoryTransaction/base/InventoryTransaction";
+import { Order } from "../../order/base/Order";
 import { Supplier } from "../../supplier/base/Supplier";
 
 @ObjectType()
@@ -49,12 +51,33 @@ class Product {
   createdAt!: Date;
 
   @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description!: string | null;
+
+  @ApiProperty({
     required: true,
     type: String,
   })
   @IsString()
   @Field(() => String)
   id!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Inventory],
+  })
+  @ValidateNested()
+  @Type(() => Inventory)
+  @IsOptional()
+  inventories?: Array<Inventory>;
 
   @ApiProperty({
     required: false,
@@ -76,6 +99,15 @@ class Product {
     nullable: true,
   })
   name!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Order],
+  })
+  @ValidateNested()
+  @Type(() => Order)
+  @IsOptional()
+  orders?: Array<Order>;
 
   @ApiProperty({
     required: false,

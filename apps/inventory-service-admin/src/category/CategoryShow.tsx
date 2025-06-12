@@ -37,6 +37,7 @@ export const CategoryShow = (props: ShowProps): React.ReactElement => {
               <TextField source={CATEGORY_TITLE_FIELD} />
             </ReferenceField>
             <DateField source="createdAt" label="Created At" />
+            <TextField label="description" source="description" />
             <TextField label="ID" source="id" />
             <TextField label="name" source="name" />
             <TextField label="price" source="price" />

@@ -23,7 +23,9 @@ import {
   IsInt,
 } from "class-validator";
 import { Type } from "class-transformer";
+import { InventoryCreateNestedManyWithoutProductsInput } from "./InventoryCreateNestedManyWithoutProductsInput";
 import { InventoryTransactionCreateNestedManyWithoutProductsInput } from "./InventoryTransactionCreateNestedManyWithoutProductsInput";
+import { OrderCreateNestedManyWithoutProductsInput } from "./OrderCreateNestedManyWithoutProductsInput";
 import { SupplierWhereUniqueInput } from "../../supplier/base/SupplierWhereUniqueInput";
 
 @InputType()
@@ -39,6 +41,30 @@ class ProductCreateInput {
     nullable: true,
   })
   category?: CategoryWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => InventoryCreateNestedManyWithoutProductsInput,
+  })
+  @ValidateNested()
+  @Type(() => InventoryCreateNestedManyWithoutProductsInput)
+  @IsOptional()
+  @Field(() => InventoryCreateNestedManyWithoutProductsInput, {
+    nullable: true,
+  })
+  inventories?: InventoryCreateNestedManyWithoutProductsInput;
 
   @ApiProperty({
     required: false,
@@ -63,6 +89,18 @@ class ProductCreateInput {
     nullable: true,
   })
   name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrderCreateNestedManyWithoutProductsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrderCreateNestedManyWithoutProductsInput)
+  @IsOptional()
+  @Field(() => OrderCreateNestedManyWithoutProductsInput, {
+    nullable: true,
+  })
+  orders?: OrderCreateNestedManyWithoutProductsInput;
 
   @ApiProperty({
     required: false,

@@ -21,6 +21,14 @@ import { InventoryTransactionList } from "./inventoryTransaction/InventoryTransa
 import { InventoryTransactionCreate } from "./inventoryTransaction/InventoryTransactionCreate";
 import { InventoryTransactionEdit } from "./inventoryTransaction/InventoryTransactionEdit";
 import { InventoryTransactionShow } from "./inventoryTransaction/InventoryTransactionShow";
+import { InventoryList } from "./inventory/InventoryList";
+import { InventoryCreate } from "./inventory/InventoryCreate";
+import { InventoryEdit } from "./inventory/InventoryEdit";
+import { InventoryShow } from "./inventory/InventoryShow";
+import { OrderList } from "./order/OrderList";
+import { OrderCreate } from "./order/OrderCreate";
+import { OrderEdit } from "./order/OrderEdit";
+import { OrderShow } from "./order/OrderShow";
 import { jwtAuthProvider } from "./auth-provider/ra-auth-jwt";
 
 const App = (): React.ReactElement => {
@@ -61,6 +69,20 @@ const App = (): React.ReactElement => {
           edit={InventoryTransactionEdit}
           create={InventoryTransactionCreate}
           show={InventoryTransactionShow}
+        />
+        <Resource
+          name="Inventory"
+          list={InventoryList}
+          edit={InventoryEdit}
+          create={InventoryCreate}
+          show={InventoryShow}
+        />
+        <Resource
+          name="Order"
+          list={OrderList}
+          edit={OrderEdit}
+          create={OrderCreate}
+          show={OrderShow}
         />
       </Admin>
     </div>

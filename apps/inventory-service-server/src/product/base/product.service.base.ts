@@ -14,7 +14,9 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   Product as PrismaProduct,
+  Inventory as PrismaInventory,
   InventoryTransaction as PrismaInventoryTransaction,
+  Order as PrismaOrder,
   Category as PrismaCategory,
   Supplier as PrismaSupplier,
 } from "@prisma/client";
@@ -44,6 +46,17 @@ export class ProductServiceBase {
     return this.prisma.product.delete(args);
   }
 
+  async findInventories(
+    parentId: string,
+    args: Prisma.InventoryFindManyArgs
+  ): Promise<PrismaInventory[]> {
+    return this.prisma.product
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .inventories(args);
+  }
+
   async findInventoryTransactions(
     parentId: string,
     args: Prisma.InventoryTransactionFindManyArgs
@@ -53,6 +66,17 @@ export class ProductServiceBase {
         where: { id: parentId },
       })
       .inventoryTransactions(args);
+  }
+
+  async findOrders(
+    parentId: string,
+    args: Prisma.OrderFindManyArgs
+  ): Promise<PrismaOrder[]> {
+    return this.prisma.product
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .orders(args);
   }
 
   async getCategory(parentId: string): Promise<PrismaCategory | null> {
